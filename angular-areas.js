@@ -6,7 +6,7 @@ ngAreas.areaid = -1;
 ngAreas.directive("ngAreas", ['$parse', function($parse) {
     return {
         restrict: 'A',
-        controller: function ['$scope', '$element', '$attrs', ($scope, $element, $attrs) {
+        controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
             var imageSelectAreas = function() {};
             var mainImageSelectAreas = new imageSelectAreas();
             var allow = (typeof $attrs.ngAreasAllow === 'undefined') ? {} : eval('(' + $attrs.ngAreasAllow + ')');
@@ -58,9 +58,11 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 mainImageSelectAreas.init($element, getParameters());
                 $element.css('display', 'block');
             });
+
             $element.bind('error', function() {
                 $.error("Method " + customOptions + " on load error");
             });
+
             $scope.imageArea = function(parent, areaid) {
                 var options = parent.options,
                     $image = parent.$image,
@@ -593,6 +595,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     }
                 };
             };
+
             imageSelectAreas.prototype.init = function(object, customOptions) {
                 var that = this,
                     defaultOptions = {
@@ -726,6 +729,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                         });
                 }
             };
+
             imageSelectAreas.prototype.applyRatio = function(area) {
                 var that = this;
                 var apply = function(val) {
@@ -740,6 +744,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
 
                 return tmp;
             };
+
             imageSelectAreas.prototype.removeRatio = function(area) {
                 var that = this;
                 var removeIt = function(val) {
@@ -754,6 +759,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
 
                 return tmp;
             };
+
             imageSelectAreas.prototype._refresh = function() {
                 var nbAreas = this.areas()
                     .length;
@@ -769,6 +775,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     cursor: this.options.allowSelect ? "crosshair" : "default"
                 });
             };
+
             imageSelectAreas.prototype._eachArea = function(cb) {
                 $.each(this._areas, function(areaid, area) {
                     if(area) {
@@ -776,15 +783,18 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     }
                 });
             };
+
             imageSelectAreas.prototype._remove = function(areaid) {
                 delete this._areas[areaid];
                 this._refresh();
             };
+
             imageSelectAreas.prototype.remove = function(areaid) {
                 if(this._areas[areaid]) {
                     this._areas[areaid].deleteSelection();
                 }
             };
+
             imageSelectAreas.prototype.newArea = function(event) {
                 var areaid = -1;
                 this.blurAll();
@@ -803,6 +813,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 }
                 return areaid;
             };
+
             imageSelectAreas.prototype.set = function(areaid, options, silent) {
                 if(this._areas[areaid]) {
                     options.areaid = areaid;
@@ -810,10 +821,12 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     this._areas[areaid].focus();
                 }
             };
+
             imageSelectAreas.prototype._add = function(options, silent) {
                 var areaid = this.newArea();
                 this.set(areaid, options, silent);
             };
+
             imageSelectAreas.prototype.add = function(options) {
                 var that = this;
                 this.blurAll();
@@ -829,6 +842,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     this.blurAll();
                 }
             };
+
             imageSelectAreas.prototype.reset = function() {
                 var that = this;
                 this._eachArea(function(area, areaid) {
@@ -836,6 +850,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 });
                 this._refresh();
             };
+
             imageSelectAreas.prototype.destroy = function(element) {
                 this.reset();
                 $('.ngAreas-holder')
@@ -847,6 +862,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 this.$trigger.remove();
                 this.$image.removeData("mainImageSelectAreas");
             };
+
             imageSelectAreas.prototype.areas = function() {
                 var ret = [];
                 var that = this;
@@ -858,6 +874,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
 
                 return ret;
             };
+
             imageSelectAreas.prototype.relativeAreas = function() {
                 var ret = [];
                 this._eachArea(function(area) {
@@ -865,6 +882,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 });
                 return ret;
             };
+
             imageSelectAreas.prototype.renameArea = function(areaid, name) {
                 this._eachArea(function(area) {
                     if(area.getData()
@@ -879,6 +897,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     area.blur();
                 });
             };
+
             imageSelectAreas.prototype.contains = function(point) {
                 var res = false;
                 this._eachArea(function(area) {
@@ -889,8 +908,9 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 });
                 return res;
             };
+
             var execCommand = function(currentObject, command) {
-                if(imageSelectAreas.prototype[command]) {
+                if(imageSelectAreas.prototype[command]) { // Method call
                     var ret = imageSelectAreas.prototype[command].apply($scope.selectAreas(currentObject), Array.prototype.slice.call(arguments, 1));
                     return typeof ret === "undefined" ? this : ret;
 
