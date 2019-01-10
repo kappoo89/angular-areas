@@ -524,8 +524,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 // Initialize all handlers
                 if(options.allowResize) {
                     $.each(["e", "se", "s", "sw", "w"], function(key, card) {
-                        // $.each(["nw", "n", "ne", "e", "se", "s", "sw", "w"], function(key, card) {
-                        console.log('card + "-resize"', card + "-resize");
+                        // $.each(["nw", "n", "ne", "e", "se", "s", "sw", "w"], function(key, card) {                        
                         $resizeHandlers[card] = $("<div class=\"ngAreas-element select-areas-resize-handler " + card + "\"/>")
                             .css({
                                 opacity: 0.5,
