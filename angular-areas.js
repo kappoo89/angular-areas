@@ -12,9 +12,8 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
             var allow = (typeof $attrs.ngAreasAllow === 'undefined') ? {} : eval('(' + $attrs.ngAreasAllow + ')');
             var getParameters = function() {
                 $scope.ngAreas_areas = $scope.$eval($attrs.ngAreas);
-                console.log(JSON.stringify($scope.ngAreas_areas));
                 return {
-                    width: (typeof $attrs.ngAreasWidth === 'undefined') ? 800 : $attrs.ngAreasWidth,
+                    width: (typeof $attrs.ngAreasWidth === 'undefined') ? 1000 : $attrs.ngAreasWidth,
                     areas: (typeof $attrs.ngAreas === 'undefined') ? [] : $scope.ngAreas_areas,
                     onLoaded: (typeof $attrs.ngAreasOnLoad === 'undefined') ? null : $scope.$eval($attrs.ngAreasOnLoad),
                     onAdd: (typeof $attrs.ngAreasOnAdd === 'undefined') ? null : $scope.$eval($attrs.ngAreasOnAdd),
@@ -165,7 +164,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                         });
                         $name = $($selection)
                             .empty()
-                            .append($("<div><span class=\"select-area-field-label " + area.cssClass + " border-thin name-area-id-" + area.areaid + "\">" + area.name + "</span></div>"));
+                            .append($("<div class=\"select-area-field-label border" + area.cssClass + " name-area-id-" + area.areaid + "\">" + area.name + "</div>"));
                     },
                     updateResizeHandlers = function(show) {
                         if(!options.allowResize) {
@@ -513,7 +512,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     .insertAfter($trigger);
 
                 // Initialize a selection layer and place it above the outline layer
-                $selection = $("<div class=\"ngAreas-element  border-medium\" />")
+                $selection = $("<div class=\"ngAreas-element  border\" />")
                     .addClass("select-areas-background-area")
                     .css({
                         background: "#fff url(" + $image.attr("src") + ") no-repeat",
@@ -524,7 +523,9 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
 
                 // Initialize all handlers
                 if(options.allowResize) {
-                    $.each(["nw", "n", "ne", "e", "se", "s", "sw", "w"], function(key, card) {
+                    $.each(["e", "se", "s", "sw", "w"], function(key, card) {
+                        // $.each(["nw", "n", "ne", "e", "se", "s", "sw", "w"], function(key, card) {
+                        console.log('card + "-resize"', card + "-resize");
                         $resizeHandlers[card] = $("<div class=\"ngAreas-element select-areas-resize-handler " + card + "\"/>")
                             .css({
                                 opacity: 0.5,
@@ -606,7 +607,7 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                         allowDelete: true,
                         allowNudge: true,
                         ratio: 1,
-                        minSize: [0, 0],
+                        minSize: [100, 100],
                         maxSize: [0, 0],
                         width: 0,
                         maxAreas: 0,
@@ -658,7 +659,8 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                     .css({
                         position: "relative",
                         width: this.$image.width(),
-                        height: this.$image.height()
+                        height: this.$image.height(),
+                        margin: 'auto'
                     });
 
                 // Wrap the holder around the image
@@ -766,11 +768,6 @@ ngAreas.directive("ngAreas", ['$parse', function($parse) {
                 this.$overlay.css({
                     display: nbAreas ? "block" : "none"
                 });
-                if(nbAreas) {
-                    this.$image.addClass("blurred");
-                } else {
-                    this.$image.removeClass("blurred");
-                }
                 this.$trigger.css({
                     cursor: this.options.allowSelect ? "crosshair" : "default"
                 });
